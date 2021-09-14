@@ -1,0 +1,72 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│      │  └─item
+│	   │	└─coppered_apple.json*
+│	   └──textures
+│		  ├─block
+│		  └─item
+│    	    └─coppered_apple.png*
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+├──item
+│  ├──ModItems.java
+│  └──CopperedApple.java*
+│
+└── CopperModMAIN.java*
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+en_us.json
+"item.coppermod.coppered_apple": "Coppered Apple"
+
+models/item/coppered_apple.json
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coppermod:item/coppered_apple"
+  }
+}
+
+
+textures/item/coppered_apple.png*
+ Texture supplied here
+
+ModItems.java
+
+    public static final RegistryObject<Item> COPPERED_APPLE =
+            Registration.ITEMS.register("coppered_apple",
+                    () -> new CopperedApple());
+
+
+
+
+CopperedApple.java
+package com.kaupenjoe.coppermod.item;
+
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import net.minecraft.item.Food;
+import net.minecraft.item.Item;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+
+public class CopperedApple extends Item
+{
+    public CopperedApple()
+    {
+        super(new Properties()
+                .group(CopperModMAIN.TAB)
+                .food(new Food.Builder()
+                        .hunger(5)
+                        .saturation(1.5f)
+                        .effect(() -> new EffectInstance(Effects.GLOWING, 300, 1), 0.5f)
+                        .build()));
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "coppermod:block/electrifier" },
+    "facing=south": { "model": "coppermod:block/electrifier", "y": 180 },
+    "facing=west": { "model": "coppermod:block/electrifier", "y": 270 },
+    "facing=east": { "model": "coppermod:block/electrifier", "y": 90 }
+  }
+}

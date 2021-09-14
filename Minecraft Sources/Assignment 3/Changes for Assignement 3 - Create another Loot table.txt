@@ -1,0 +1,22 @@
+src/main/resources
+└── data
+     └──coppermod
+	     └──loot_tables
+	        └──blocks
+			    └──copper_block.json*
+
+copper_block.json*
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "coppermod:copper_block"
+        }
+      ]
+    }
+  ]
+}

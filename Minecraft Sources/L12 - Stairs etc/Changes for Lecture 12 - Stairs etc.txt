@@ -1,0 +1,73 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   │  ├─copper_button.json*
+│	   │  ├─copper_fence.json*
+│	   │  ├─copper_fence_gate.json*
+│	   │  ├─copper_pressure_plate.json*
+│	   │  └─copper_stairs.json*
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   └──models
+│	      ├─block
+│         │ ├─copper_button.json*
+│         │ ├─copper_button_inventory.json*
+│         │ ├─copper_button_pressed.json*
+│         │ ├─copper_fence_gate.json*
+│         │ ├─copper_fence_gate_open.json*
+│         │ ├─copper_fence_gate_wall.json*
+│         │ ├─copper_fence_gate_wall_open.json*
+│         │ ├─copper_fence_inventory.json*
+│         │ ├─copper_fence_post.json*
+│         │ ├─copper_fence_side.json*
+│         │ ├─copper_fence_pressure_plate.json*
+│         │ ├─copper_fence_pressure_plate_down.json*
+│         │ ├─copper_fence_stairs.json*
+│         │ ├─copper_fence_stairs_inner.json*
+│	      │	└─copper_fence_stairs_outer.json*
+│         └─item
+│           ├─copper_button.json*
+│           ├─copper_fence.json*
+│           ├─copper_fence_gate.json*
+│           ├─copper_pressure_plate.json*
+│	      	└─copper_stairs.json*
+└──data
+   └─minecraft
+	 └─tags
+	   └─blocks
+		 └─fences.json*
+
+src/main/java/com/your/package/modid/
+└──item
+	└──ModItems.java*
+
+en_us.json
+  "block.coppermod.copper_stairs": "Copper Stairs",
+  "block.coppermod.copper_fence": "Copper Fence",
+  "block.coppermod.copper_fence_gate": "Copper Fence Gate",
+  "block.coppermod.copper_button": "Copper Button",
+  "block.coppermod.copper_pressure_plate": "Copper Pressure Plate"
+  
+ModBlocks.java
+	// These should be added after the Copper_Ore and above the regsiter Method
+	
+    public static final RegistryObject<Block> COPPER_STAIRS =
+            register("copper_stairs", () -> new StairsBlock( () -> ModBlocks.COPPER_BLOCK.get().getDefaultState(),
+                    AbstractBlock.Properties.create(Material.IRON)));
+
+    public static final RegistryObject<Block> COPPER_FENCE =
+            register("copper_fence", () -> new FenceBlock(AbstractBlock.Properties.create(Material.IRON)));
+
+    public static final RegistryObject<Block> COPPER_FENCE_GATE =
+            register("copper_fence_gate", () -> new FenceGateBlock(AbstractBlock.Properties.create(Material.IRON)));
+
+    public static final RegistryObject<Block> COPPER_BUTTON =
+            register("copper_button", () -> new StoneButtonBlock(AbstractBlock.Properties.create(Material.IRON)));
+
+    public static final RegistryObject<Block> COPPPER_PRESSURE_PLATE =
+            register("copper_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,
+                    AbstractBlock.Properties.create(Material.IRON)));
+
+NOTE: ALL OTHER FILES ARE WITHIN THIS DIRECTORY! 
+SIMPLY COPY THEM OVER TO YOUR PROJECT AND CHANGE VALUES IF NEEDED!

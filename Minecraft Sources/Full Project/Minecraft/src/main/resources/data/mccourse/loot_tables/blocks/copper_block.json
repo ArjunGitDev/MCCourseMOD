@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+          {
+            "type": "minecraft:item",
+            "conditions": [
+                {
+                    "condition": "random_chance",
+                    "chance": 0.5
+                }
+            ],
+            "functions": [
+              {
+                "function": "minecraft:set_count",
+                "count": {
+                  "min": 3.0,
+                  "max": 5.0,
+                  "type": "minecraft:uniform"
+                }
+              }
+            ],
+            "name": "coppermod:copper_block"
+          }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "coppermod:copper_wire"
+          }
+      ]
+    }
+  ]
+}

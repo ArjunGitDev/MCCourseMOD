@@ -1,0 +1,25 @@
+src/main/resources
+└── data
+    └──coppermod
+	   └──loot_tables
+	      └──blocks
+			  └──copper_ore.json*
+
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+copper_ore.json
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "coppermod:copper_ore"
+        }
+      ]
+    }
+  ]
+}

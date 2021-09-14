@@ -1,0 +1,156 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│      │   └─item
+│      │     ├─copper_axe.json*
+│      │     ├─copper_hoe.json*
+│      │     ├─copper_pickaxe.json*
+│      │     ├─copper_shovel.json*
+│      │     └─copper_sword.json*
+│	   └──textures
+│		  ├─block
+│		  └─item
+│    	    ├─copper_axe.png*
+│    	    ├─copper_hoe.png*
+│    	    ├─copper_pickaxe.png*
+│    	    ├─copper_shovel.png*
+│    	    └─copper_sword.png*
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+├──item
+│  └──ModItems.java*
+│
+└── CopperModMAIN.java
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+en_us.json
+  "item.coppermod.copper_shovel": "Copper Shovel",
+  "item.coppermod.copper_axe": "Copper Axe",
+  "item.coppermod.copper_pickaxe": "Copper Pickaxe",
+  "item.coppermod.copper_hoe": "Copper Hoe",
+  "item.coppermod.copper_sword": "Copper Sword",
+
+models/item
+ the json-files are provided in this directory
+
+ModItems.java
+	// Should be added below the Coppered Apple registration
+
+    /* TOOLS */
+
+    public static final RegistryObject<Item> COPPER_SHOVEL =
+            Registration.ITEMS.register("copper_shovel",
+                    () -> new ShovelItem(ModItemTier.COPPER, 0f, 0f,
+                            new Item.Properties()
+                                    .defaultMaxDamage(150)
+                                    .addToolType(ToolType.SHOVEL, 2)
+                                    .group(CopperModMAIN.TAB)));
+
+
+    public static final RegistryObject<Item> COPPER_SWORD =
+            Registration.ITEMS.register("copper_sword",
+                    () -> new SwordItem(ModItemTier.COPPER, 2, 0.5f,
+                            new Item.Properties()
+                                    .defaultMaxDamage(150)
+                                    .group(CopperModMAIN.TAB)));
+
+
+    public static final RegistryObject<Item> COPPER_PICKAXE =
+            Registration.ITEMS.register("copper_pickaxe",
+                    () -> new PickaxeItem(ModItemTier.COPPER, 0, 0f,
+                            new Item.Properties()
+                                    .defaultMaxDamage(150)
+                                    .addToolType(ToolType.PICKAXE, 1)
+                                    .group(CopperModMAIN.TAB)));
+
+
+    public static final RegistryObject<Item> COPPER_HOE =
+            Registration.ITEMS.register("copper_hoe",
+                    () -> new HoeItem(ModItemTier.COPPER, 0, 0f,
+                            new Item.Properties()
+                                    .defaultMaxDamage(150)
+                                    .addToolType(ToolType.HOE, 1)
+                                    .group(CopperModMAIN.TAB)));
+
+
+    public static final RegistryObject<Item> COPPER_AXE =
+            Registration.ITEMS.register("copper_axe",
+                    () -> new AxeItem(ModItemTier.COPPER, 2.5f, -2.5f,
+                            new Item.Properties()
+                                    .defaultMaxDamage(150)
+                                    .addToolType(ToolType.AXE, 1)
+                                    .group(CopperModMAIN.TAB)));
+
+
+
+    public static void register() { }
+
+    public enum ModItemTier implements IItemTier
+    {
+        COPPER(2, 150, 2.5f, 0f, 15,
+                Ingredient.fromStacks(new ItemStack(ModItems.COPPER_INGOT.get())));
+
+        private final int harvestLevel;
+        private final int maxUses;
+        private final float efficiency;
+        private final float attackDamage;
+        private final int enchantability;
+        private final Ingredient repairMaterial;
+
+        ModItemTier(int harvestLevel, int maxUses, float efficiency,
+                    float attackDamage, int enchantability, Ingredient repairMaterial) {
+            this.harvestLevel = harvestLevel;
+            this.maxUses = maxUses;
+            this.efficiency = efficiency;
+            this.attackDamage = attackDamage;
+            this.enchantability = enchantability;
+            this.repairMaterial = repairMaterial;
+        }
+
+        @Override
+        public int getMaxUses()
+        {
+            return maxUses;
+        }
+
+        @Override
+        public float getEfficiency()
+        {
+            return efficiency;
+        }
+
+        @Override
+        public float getAttackDamage()
+        {
+            return attackDamage;
+        }
+
+        @Override
+        public int getHarvestLevel()
+        {
+            return harvestLevel;
+        }
+
+        @Override
+        public int getEnchantability()
+        {
+            return enchantability;
+        }
+
+        @Override
+        public Ingredient getRepairMaterial()
+        {
+            return repairMaterial;
+        }
+    }
+
+Textures:
+ Textures are supplied

@@ -1,0 +1,442 @@
+src/main/java/com/your/package/modid/
+├──block
+│  └──Electrifier.java*
+│
+├──util
+│  ├──ElectrifierContainer.java*
+│  └──ModContainers.java*
+│
+├──container
+│  └──Registration.java*
+│
+├──screen
+│  └──ElectrifierScreen.java*
+│
+├──setup
+│  └──ClientProxy.java*
+│
+├──tileentity
+│  └──ElectrifierTile.java*
+│
+└── CopperModMAIN.java*
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+Electrifier.java
+Add this method:
+
+@SuppressWarnings("deprecation")
+@Override
+public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
+										 PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
+	if (!world.isRemote())
+	{
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity instanceof ElectrifierTile)
+		{
+			INamedContainerProvider containerProvider = new INamedContainerProvider() {
+				@Override
+				public ITextComponent getDisplayName() {
+					return new TranslationTextComponent("screen.coppermod.electrifier");
+				}
+
+				@Override
+				public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+					return new ElectrifierContainer(i, world, pos, playerInventory, playerEntity);
+				}
+			};
+			NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+		} else {
+			throw new IllegalStateException("Our named container provider is missing!");
+		}
+	}
+
+	return ActionResultType.SUCCESS;
+}
+
+
+ElectrifierContainer:
+
+package com.kaupenjoe.coppermod.container;
+
+
+import com.kaupenjoe.coppermod.block.ModBlocks;
+import com.kaupenjoe.coppermod.tileentity.ElectrifierTile;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+
+public class ElectrifierContainer extends Container
+{
+    private TileEntity tileEntity;
+    private PlayerEntity playerEntity;
+    private IItemHandler playerInventory;
+
+    public ElectrifierContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player)
+    {
+        super(ModContainers.ELECTRIFIER_CONTAINER.get(), windowId);
+        tileEntity = world.getTileEntity(pos);
+        this.playerEntity = player;
+        this.playerInventory = new InvWrapper(playerInventory);
+
+        if (tileEntity != null) {
+            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
+                addSlot(new SlotItemHandler(h, 0, 30, 57));
+                addSlot(new SlotItemHandler(h, 1, 134, 15));
+                addSlot(new SlotItemHandler(h, 2, 134, 57));
+            });
+        }
+
+        layoutPlayerInventorySlots(8, 84);
+    }
+
+    @Override
+    public boolean canInteractWith(PlayerEntity playerIn)
+    {
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(),
+                tileEntity.getPos()), playerEntity, ModBlocks.ELECTRIFIER.get());
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack = slot.getStack();
+            itemstack = stack.copy();
+            if (index == 0) {
+                if (!this.mergeItemStack(stack, 1, 37, true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onSlotChange(stack, itemstack);
+            } else {
+                if (stack.getItem() == Items.DIAMOND) {
+                    if (!this.mergeItemStack(stack, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index < 28) {
+                    if (!this.mergeItemStack(stack, 28, 37, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index < 37 && !this.mergeItemStack(stack, 1, 28, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+
+            if (stack.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerIn, stack);
+        }
+
+        return itemstack;
+    }
+
+    private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+        for (int i = 0 ; i < amount ; i++) {
+            addSlot(new SlotItemHandler(handler, index, x, y));
+            x += dx;
+            index++;
+        }
+        return index;
+    }
+
+    private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
+        for (int j = 0 ; j < verAmount ; j++) {
+            index = addSlotRange(handler, index, x, y, horAmount, dx);
+            y += dy;
+        }
+        return index;
+    }
+
+    private void layoutPlayerInventorySlots(int leftCol, int topRow) {
+        // Player inventory
+        addSlotBox(playerInventory, 9, leftCol, topRow, 9, 18, 3, 18);
+
+        // Hotbar
+        topRow += 58;
+        addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public int getEnergyLevel()
+    {
+        return ((ElectrifierTile) this.tileEntity).getEnergyLevel();
+    }
+}
+
+
+
+ModContainers.java
+
+package com.kaupenjoe.coppermod.container;
+
+import com.kaupenjoe.coppermod.container.ElectrifierContainer;
+import com.kaupenjoe.coppermod.util.Registration;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+
+public class ModContainers
+{
+    public static final RegistryObject<ContainerType<ElectrifierContainer>> ELECTRIFIER_CONTAINER
+            = Registration.CONTAINERS.register("electrifier_container",
+            () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new ElectrifierContainer(windowId, world, pos, inv, inv.player);
+    }));
+
+    public static void register() { }
+
+}
+
+
+ClientProxy.java:
+
+Add this to the init() method:
+
+	ScreenManager.registerFactory(ModContainers.ELECTRIFIER_CONTAINER.get(), ElectrifierScreen::new);
+
+
+ElectrifierScreen.java:
+
+package com.kaupenjoe.coppermod.screens;
+
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import com.kaupenjoe.coppermod.container.ElectrifierContainer;
+import com.kaupenjoe.coppermod.tileentity.ElectrifierTile;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+
+public class ElectrifierScreen extends ContainerScreen<ElectrifierContainer>
+{
+    private final ResourceLocation GUI = new ResourceLocation(CopperModMAIN.MOD_ID,
+            "textures/gui/electrifier_gui.png");
+
+    public ElectrifierScreen(ElectrifierContainer container, PlayerInventory inv, ITextComponent name)
+    {
+        super(container, inv, name);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
+        LogManager.getLogger().debug("EL: " + container.getEnergyLevel());
+        drawString(matrixStack, Minecraft.getInstance().fontRenderer,"Energy: " +
+                container.getEnergyLevel(), 28, 10, 0xffffff);
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y)
+    {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bindTexture(GUI);
+        int i = this.guiLeft;
+        int j = this.guiTop;
+        this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+
+        this.blit(matrixStack, i + 13, j + 9, 176, 0, 11, 64 - container.getEnergyLevel());
+    }
+}
+
+ElectrifierTile.java
+
+package com.kaupenjoe.coppermod.tileentity;
+
+import com.kaupenjoe.coppermod.item.ModItems;
+import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ElectrifierTile extends TileEntity implements ITickableTileEntity
+{
+    private final ItemStackHandler itemHandler = createHandler();
+
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
+
+    private int tick = 0;
+    private int energyLevel = 0;
+
+    public ElectrifierTile(TileEntityType<?> tileEntityTypeIn)
+    {
+        super(tileEntityTypeIn);
+    }
+
+    public ElectrifierTile()
+    {
+        this(ModTileEntitites.ELECTRIFIER_TILE_ENTITY.get());
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        handler.invalidate();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public int getEnergyLevel()
+    {
+        return energyLevel;
+    }
+
+    @Override
+    public void tick()
+    {
+        tick++;
+        if(tick > 2) // CONFIG
+        {
+            if(this.itemHandler.getStackInSlot(0).getItem() == Items.DIAMOND && this.energyLevel < 64)
+            {
+                itemHandler.extractItem(0,1, false); // "Deletes" the item
+                energyLevel++;
+            }
+
+            if(this.itemHandler.getStackInSlot(1).getItem() == ModItems.COPPER_WIRE.get()
+                    && this.energyLevel > 0 && this.itemHandler.getStackInSlot(2).getCount() != 64)
+            {
+                itemHandler.extractItem(1, 1, false); // "Deletes" the item
+                itemHandler.insertItem(2, new ItemStack(Items.EMERALD, 1), false);
+                energyLevel--;
+            }
+
+            tick = 0;
+        }
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT tag)
+    {
+        itemHandler.deserializeNBT(tag.getCompound("inv"));
+        this.energyLevel = tag.getInt("energyLevel");
+
+        super.read(state, tag);
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag)
+    {
+        tag.put("inv", itemHandler.serializeNBT());
+        tag.putInt("energyLevel", this.energyLevel);
+
+        return super.write(tag);
+    }
+
+    private ItemStackHandler createHandler() {
+        return new ItemStackHandler(3) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                // To make sure the TE persists when the chunk is saved later we need to
+                // mark it dirty every time the item handler changes
+                markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+            {
+                switch(slot)
+                {
+                    case 0: return stack.getItem() == Items.DIAMOND;
+                    case 1: return stack.getItem() == ModItems.COPPER_WIRE.get();
+                    case 2: return stack.getItem() == Items.EMERALD;
+                    default: return false;
+                }
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+            {
+                if(!isItemValid(slot, stack))
+                {
+                    return stack;
+                }
+
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side)
+    {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return handler.cast();
+        }
+
+        return super.getCapability(capability, side);
+    }
+}
+
+
+Registration.java
+
+add this:
+
+    public static final DeferredRegister<ContainerType<?>> CONTAINERS =
+            DeferredRegister.create(ForgeRegistries.CONTAINERS, CopperModMAIN.MOD_ID);
+
+
+
+
+CopperModMAIN.java
+
+add this to the registerModAdditions():
+
+	ModContainers.register();

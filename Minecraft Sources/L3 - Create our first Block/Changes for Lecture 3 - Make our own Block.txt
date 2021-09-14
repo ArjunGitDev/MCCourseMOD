@@ -1,0 +1,91 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   │  └──copper_block.json*
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│	   │  ├─block
+│	   │  │ └─copper_block.json*
+│      │  └─item
+│	   │	└─copper_block.json*
+│	   └──textures
+│		  ├─block
+│    	  │ └─copper_block.png*
+│		  └─item
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+├──block
+│  └──ModBlocks.java*
+│
+└── CopperModMAIN.java*
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+blockstates/copper_block.json:
+{
+    "variants": {
+        "": { "model": "coppermod:block/copper_block" }
+    }
+}
+
+en_us.json:
+"block.coppermod.copper_block": "Copper Block",
+
+models/block/copper_block.json
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "coppermod:block/copper_block"
+  }
+}
+
+models/item/copper_block.json
+{
+    "parent": "coppermod:block/copper_block"
+}
+
+textures/block/copper_block.png:
+ --> Texture is supplied as a Resource for this lecture!
+
+ModBlocks.java:
+package com.kaupenjoe.coppermod.block;
+
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import com.kaupenjoe.coppermod.util.Registration;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.RegistryObject;
+
+import java.util.function.Supplier;
+
+public class ModBlocks
+{
+    public static final RegistryObject<Block> COPPER_BLOCK = register("copper_block",
+            () -> new Block(AbstractBlock.Properties.create(Material.IRON)
+                    .hardnessAndResistance(3f, 10f).sound(SoundType.METAL)));
+
+    public static void register() { }
+
+    private static <T extends Block>RegistryObject<T> register(String name, Supplier<T> block)
+    {
+        RegistryObject<T> toReturn = Registration.BLOCKS.register(name, block);
+        Registration.ITEMS.register(name, () -> new BlockItem(toReturn.get(),
+                new Item.Properties().group(ItemGroup.BUILDING_MATERIALS)));
+        return toReturn;
+    }
+}
+
+
+CopperModMAIN.java:
+ add inside of the Constructor:
+    ModBlocks.register();

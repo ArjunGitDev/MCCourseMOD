@@ -1,0 +1,11 @@
+REFERNCE THE LECTURE AT 13:30 TO SEE WHERE THIS NEEDS TO BE ADDED!
+
+args '--mod', 'coppermod', '--all',
+		'--existing', file('src/main/resources').toString(),
+		'--existing', file('src/generated/resources').toString(),
+		'--output', file('src/generated/resources/')
+		
+					
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}

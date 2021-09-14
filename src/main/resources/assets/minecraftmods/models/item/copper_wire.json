@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coppermod:item/copper_wire"
+  }
+
+}

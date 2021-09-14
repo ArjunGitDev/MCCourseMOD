@@ -1,0 +1,497 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   │  └──electrifier.json*
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│	   │  ├─block
+│	   │  │ └─electrifier.json*
+│      │  └─item
+│	   │	└─electrifier.json*
+│	   └──textures
+│		  └─block
+│    	    ├─electrifier_1.png*
+│    	    ├─electrifier_2.png*
+│    	    └─electrifier_3.png*
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+├──block
+│  ├──ModBlocks.java*
+│  └──Electrifier.java*
+│
+└── CopperModMAIN.java
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+blockstates/electrifier.json
+
+{
+  "variants": {
+    "facing=north": { "model": "coppermod:block/electrifier" },
+    "facing=south": { "model": "coppermod:block/electrifier", "y": 180 },
+    "facing=west": { "model": "coppermod:block/electrifier", "y": 270 },
+    "facing=east": { "model": "coppermod:block/electrifier", "y": 90 }
+  }
+}
+
+en_us.json
+
+  "block.coppermod.electrifier": "Electrifier"
+
+
+models/block/electrifier.json
+
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "block/electrifier_1",
+		"1": "block/electrifier_2",
+		"2": "block/electrifier_3",
+		"particle": "block/electrifier_1"
+	},
+	"elements": [
+		{
+			"from": [14, 14, 14],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 14, 0],
+			"to": [2, 16, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [14, 14, 0],
+			"to": [16, 16, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 14, 14],
+			"to": [2, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [1, 2, 1],
+			"to": [15, 14, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 14, 12], "texture": "#0"},
+				"east": {"uv": [0, 0, 14, 12], "texture": "#0"},
+				"south": {"uv": [0, 0, 14, 12], "texture": "#0"},
+				"west": {"uv": [0, 0, 14, 12], "texture": "#0"},
+				"up": {"uv": [0, 0, 14, 14], "texture": "#0"},
+				"down": {"uv": [0, 0, 14, 14], "texture": "#0"}
+			}
+		},
+		{
+			"from": [14, 0, 14],
+			"to": [16, 2, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [2, 2, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [14, 0, 0],
+			"to": [16, 2, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 0, 14],
+			"to": [2, 2, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"south": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#1"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 2, 0],
+			"to": [2, 14, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"east": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"south": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"west": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#2"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#2"}
+			}
+		},
+		{
+			"from": [2, 14, 15],
+			"to": [14, 15, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"east": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"south": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"west": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"up": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"down": {"uv": [0, 0, 12, 1], "texture": "#2"}
+			}
+		},
+		{
+			"from": [15, 14, 2],
+			"to": [16, 15, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"east": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"west": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"up": {"uv": [0, 0, 12, 1], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [0, 0, 12, 1], "rotation": 270, "texture": "#2"}
+			}
+		},
+		{
+			"from": [0, 14, 2],
+			"to": [1, 15, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"east": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"south": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"west": {"uv": [0, 0, 12, 1], "texture": "#2"},
+				"up": {"uv": [0, 0, 12, 1], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [0, 0, 12, 1], "rotation": 270, "texture": "#2"}
+			}
+		},
+		{
+			"from": [2, 14, 0],
+			"to": [14, 16, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 12, 2], "texture": "#2"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#2"},
+				"south": {"uv": [0, 0, 12, 2], "texture": "#2"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#2"},
+				"up": {"uv": [0, 0, 12, 2], "texture": "#2"},
+				"down": {"uv": [0, 0, 12, 2], "texture": "#2"}
+			}
+		},
+		{
+			"from": [14, 2, 0],
+			"to": [16, 14, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"east": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"south": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"west": {"uv": [0, 0, 2, 12], "texture": "#2"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#2"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#2"}
+			}
+		},
+		{
+			"from": [0, 2, 15],
+			"to": [1, 14, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"east": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"south": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"west": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#2"}
+			}
+		},
+		{
+			"from": [15, 2, 15],
+			"to": [16, 14, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9.55882, 8.08824]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"east": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"south": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"west": {"uv": [0, 0, 1, 12], "texture": "#2"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#2"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#2"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [36, 18, 0],
+			"translation": [0, -0.75, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [36, 18, 0],
+			"translation": [0, -0.75, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"firstperson_righthand": {
+			"rotation": [36, 18, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"firstperson_lefthand": {
+			"rotation": [36, 18, 0],
+			"scale": [0.2, 0.2, 0.2]
+		},
+		"ground": {
+			"translation": [0, -2, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [0, 25, 5],
+			"scale": [0.7, 0.7, 0.7]
+		},
+		"head": {
+			"translation": [0, 11, 0]
+		}
+	},
+	"groups": [
+		{
+			"name": "VoxelShapes",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+		}
+	]
+}
+
+
+models/item/electrifier.json
+
+{
+  "parent": "coppermod:block/electrifier"
+}
+
+
+
+
+ModBlocks.java
+Add this anywhere above the register Methods
+
+    public static final RegistryObject<Block> ELECTRIFIER = register("electrifier",
+            () -> new Electrifier(AbstractBlock.Properties.create(Material.IRON)
+                    .harvestTool(ToolType.PICKAXE)));
+
+
+Electrifier.java:
+
+package com.kaupenjoe.coppermod.block;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalBlock;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+
+import javax.annotation.Nullable;
+import java.util.stream.Stream;
+
+public class Electrifier extends Block
+{
+    private static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+
+    private static final VoxelShape SHAPE_N = Stream.of(
+            Block.makeCuboidShape(14, 14, 14, 15.999999999999998, 16, 16),
+            Block.makeCuboidShape(1.7763568394002505e-15, 14, 3.552713678800501e-15, 2, 16, 2),
+            Block.makeCuboidShape(14, 14, 3.552713678800501e-15, 15.999999999999998, 16, 2),
+            Block.makeCuboidShape(1.7763568394002505e-15, 14, 14, 2, 16, 16),
+            Block.makeCuboidShape(1, 2, 1, 15, 14, 15),
+            Block.makeCuboidShape(14, 0, 14, 15.999999999999998, 2, 16),
+            Block.makeCuboidShape(1.7763568394002505e-15, 0, 3.552713678800501e-15, 2, 2, 2),
+            Block.makeCuboidShape(14, 0, 3.552713678800501e-15, 15.999999999999998, 2, 2),
+            Block.makeCuboidShape(1.7763568394002505e-15, 0, 14, 2, 2, 16),
+            Block.makeCuboidShape(1.7763568394002505e-15, 2, 3.552713678800501e-15, 2, 14, 2),
+            Block.makeCuboidShape(2, 14, 15, 14, 15, 16),
+            Block.makeCuboidShape(15, 14, 2, 15.999999999999998, 15, 14),
+            Block.makeCuboidShape(1.7763568394002505e-15, 14, 2, 1, 15, 14),
+            Block.makeCuboidShape(2, 14, 3.552713678800501e-15, 14, 16, 2),
+            Block.makeCuboidShape(14, 2, 3.552713678800501e-15, 15.999999999999998, 14, 2),
+            Block.makeCuboidShape(1.7763568394002505e-15, 2, 15, 1, 14, 16),
+            Block.makeCuboidShape(15, 2, 15, 15.999999999999998, 14, 16)
+    ).reduce((v1, v2) -> {return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);}).get();
+
+
+    private static final VoxelShape SHAPE_E = Stream.of(
+            Block.makeCuboidShape(0.08823529411764852, 14, 14.088235294117649, 2.0882352941176485, 16, 16.088235294117645),
+            Block.makeCuboidShape(14.088235294117649, 14, 0.08823529411765207, 16.088235294117645, 16, 2.0882352941176485),
+            Block.makeCuboidShape(14.088235294117649, 14, 14.088235294117649, 16.088235294117645, 16, 16.088235294117645),
+            Block.makeCuboidShape(0.08823529411764852, 14, 0.08823529411765207, 2.0882352941176485, 16, 2.0882352941176485),
+            Block.makeCuboidShape(1.0882352941176485, 2, 1.0882352941176485, 15.088235294117649, 14, 15.088235294117649),
+            Block.makeCuboidShape(0.08823529411764852, 0, 14.088235294117649, 2.0882352941176485, 2, 16.088235294117645),
+            Block.makeCuboidShape(14.088235294117649, 0, 0.08823529411765207, 16.088235294117645, 2, 2.0882352941176485),
+            Block.makeCuboidShape(14.088235294117649, 0, 14.088235294117649, 16.088235294117645, 2, 16.088235294117645),
+            Block.makeCuboidShape(0.08823529411764852, 0, 0.08823529411765207, 2.0882352941176485, 2, 2.0882352941176485),
+            Block.makeCuboidShape(14.088235294117649, 2, 0.08823529411765207, 16.088235294117645, 14, 2.0882352941176485),
+            Block.makeCuboidShape(0.08823529411764852, 14, 2.0882352941176485, 1.0882352941176485, 15, 14.088235294117649),
+            Block.makeCuboidShape(2.0882352941176485, 14, 15.088235294117649, 14.088235294117649, 15, 16.088235294117645),
+            Block.makeCuboidShape(2.0882352941176485, 14, 0.08823529411765207, 14.088235294117649, 15, 1.0882352941176485),
+            Block.makeCuboidShape(14.088235294117649, 14, 2.0882352941176485, 16.088235294117645, 16, 14.088235294117649),
+            Block.makeCuboidShape(14.088235294117649, 2, 14.088235294117649, 16.088235294117645, 14, 16.088235294117645),
+            Block.makeCuboidShape(0.08823529411764852, 2, 0.08823529411765207, 1.0882352941176485, 14, 1.0882352941176485),
+            Block.makeCuboidShape(0.08823529411764852, 2, 15.088235294117649, 1.0882352941176485, 14, 16.088235294117645)
+    ).reduce((v1, v2) -> {return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);}).get();
+
+    private static final VoxelShape SHAPE_S = Stream.of(
+            Block.makeCuboidShape(3.552713678800501e-15, 14, 0.17647058823529704, 2, 16, 2.176470588235297),
+            Block.makeCuboidShape(14, 14, 14.176470588235297, 15.999999999999996, 16, 16.176470588235293),
+            Block.makeCuboidShape(3.552713678800501e-15, 14, 14.176470588235297, 2, 16, 16.176470588235293),
+            Block.makeCuboidShape(14, 14, 0.17647058823529704, 15.999999999999996, 16, 2.176470588235297),
+            Block.makeCuboidShape(1, 2, 1.176470588235297, 15, 14, 15.176470588235297),
+            Block.makeCuboidShape(3.552713678800501e-15, 0, 0.17647058823529704, 2, 2, 2.176470588235297),
+            Block.makeCuboidShape(14, 0, 14.176470588235297, 15.999999999999996, 2, 16.176470588235293),
+            Block.makeCuboidShape(3.552713678800501e-15, 0, 14.176470588235297, 2, 2, 16.176470588235293),
+            Block.makeCuboidShape(14, 0, 0.17647058823529704, 15.999999999999996, 2, 2.176470588235297),
+            Block.makeCuboidShape(14, 2, 14.176470588235297, 15.999999999999996, 14, 16.176470588235293),
+            Block.makeCuboidShape(2, 14, 0.17647058823529704, 14, 15, 1.176470588235297),
+            Block.makeCuboidShape(3.552713678800501e-15, 14, 2.176470588235297, 1, 15, 14.176470588235297),
+            Block.makeCuboidShape(15, 14, 2.176470588235297, 15.999999999999996, 15, 14.176470588235297),
+            Block.makeCuboidShape(2, 14, 14.176470588235297, 14, 16, 16.176470588235293),
+            Block.makeCuboidShape(3.552713678800501e-15, 2, 14.176470588235297, 2, 14, 16.176470588235293),
+            Block.makeCuboidShape(15, 2, 0.17647058823529704, 15.999999999999996, 14, 1.176470588235297),
+            Block.makeCuboidShape(3.552713678800501e-15, 2, 0.17647058823529704, 1, 14, 1.176470588235297)
+    ).reduce((v1, v2) -> {return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);}).get();
+
+    private static final VoxelShape SHAPE_W = Stream.of(
+            Block.makeCuboidShape(13.911764705882351, 14, 0.08823529411765207, 15.911764705882351, 16, 2.0882352941176485),
+            Block.makeCuboidShape(-0.08823529411764497, 14, 14.088235294117649, 1.9117647058823515, 16, 16.088235294117645),
+            Block.makeCuboidShape(-0.08823529411764497, 14, 0.08823529411765207, 1.9117647058823515, 16, 2.0882352941176485),
+            Block.makeCuboidShape(13.911764705882351, 14, 14.088235294117649, 15.911764705882351, 16, 16.088235294117645),
+            Block.makeCuboidShape(0.9117647058823515, 2, 1.0882352941176485, 14.911764705882351, 14, 15.088235294117649),
+            Block.makeCuboidShape(13.911764705882351, 0, 0.08823529411765207, 15.911764705882351, 2, 2.0882352941176485),
+            Block.makeCuboidShape(-0.08823529411764497, 0, 14.088235294117649, 1.9117647058823515, 2, 16.088235294117645),
+            Block.makeCuboidShape(-0.08823529411764497, 0, 0.08823529411765207, 1.9117647058823515, 2, 2.0882352941176485),
+            Block.makeCuboidShape(13.911764705882351, 0, 14.088235294117649, 15.911764705882351, 2, 16.088235294117645),
+            Block.makeCuboidShape(-0.08823529411764497, 2, 14.088235294117649, 1.9117647058823515, 14, 16.088235294117645),
+            Block.makeCuboidShape(14.911764705882351, 14, 2.0882352941176485, 15.911764705882351, 15, 14.088235294117649),
+            Block.makeCuboidShape(1.9117647058823515, 14, 0.08823529411765207, 13.911764705882351, 15, 1.0882352941176485),
+            Block.makeCuboidShape(1.9117647058823515, 14, 15.088235294117649, 13.911764705882351, 15, 16.088235294117645),
+            Block.makeCuboidShape(-0.08823529411764497, 14, 2.0882352941176485, 1.9117647058823515, 16, 14.088235294117649),
+            Block.makeCuboidShape(-0.08823529411764497, 2, 0.08823529411765207, 1.9117647058823515, 14, 2.0882352941176485),
+            Block.makeCuboidShape(14.911764705882351, 2, 15.088235294117649, 15.911764705882351, 14, 16.088235294117645),
+            Block.makeCuboidShape(14.911764705882351, 2, 0.08823529411765207, 15.911764705882351, 14, 1.0882352941176485)
+    ).reduce((v1, v2) -> {return VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR);}).get();
+
+
+    public Electrifier(Properties properties)
+    {
+        super(properties);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        switch (state.get(FACING))
+        {
+            case NORTH:
+                return SHAPE_N;
+            case EAST:
+                return SHAPE_E;
+            case SOUTH:
+                return SHAPE_S;
+            case WEST:
+                return SHAPE_W;
+            default:
+                return SHAPE_N;
+        }
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context)
+    {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot)
+    {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn)
+    {
+        return state.rotate(mirrorIn.toRotation((state.get(FACING))));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(FACING);
+    }
+}
+

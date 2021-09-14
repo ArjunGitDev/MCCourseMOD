@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " cc",
+    " xc",
+    " x "
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "minecraft:stick"
+    },
+    "c":
+    {
+      "item": "coppermod:copper_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "coppermod:copper_axe"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 6.0,
+                "type": "minecraft:uniform"
+
+              }
+            }
+          ],
+          "name": "coppermod:copper_ore",
+          "weight": 50
+        },
+        {
+          "type": "minecraft:item",
+          "name": "coppermod:copper_wire",
+          "weight": 50
+        }
+      ]
+    }
+  ]
+}

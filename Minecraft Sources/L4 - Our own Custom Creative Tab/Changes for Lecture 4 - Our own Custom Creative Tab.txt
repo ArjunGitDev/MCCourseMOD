@@ -1,0 +1,61 @@
+src/main/resources
+└── assets
+    └──coppermod
+	   ├──blockstates
+	   │  └──copper_block.json*
+	   └──lang
+	   	  └──en_us.json*
+
+
+
+src/main/java/com/your/package/modid/
+├──block
+│  └──ModBlocks.java*
+├──item
+│  └──ModItems.java*
+└── CopperModMAIN.java*
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+
+
+en_us.json:
+"itemGroup.courseTab": "Course Tab"
+
+ModBlocks.java
+	// Inside of the register Method 
+	// The Item.Properties().group(ItemGroup.BUILDING_MATERIALS) needs to be changed to .group(CopperModMAIN.COURSE_TAB)
+
+    private static <T extends Block>RegistryObject<T> register(String name, Supplier<T> block)
+    {
+        RegistryObject<T> toReturn = Registration.BLOCKS.register(name, block);
+        Registration.ITEMS.register(name, () -> new BlockItem(toReturn.get(),
+                new Item.Properties().group(CopperModMAIN.COURSE_TAB)));
+        return toReturn;
+    }
+
+ModItems.java
+	// The Item.Properties().group(ItemGroup.Materials) needs to be changed to .group(CopperModMAIN.COURSE_TAB)
+
+    public static final RegistryObject<Item> COPPER_INGOT =
+            Registration.ITEMS.register("copper_ingot",
+            () -> new Item(new Item.Properties().group(ItemGroup.COURSE_TAB)));
+
+    public static final RegistryObject<Item> COPPER_WIRE =
+            Registration.ITEMS.register("copper_wire",
+                    () -> new Item(new Item.Properties().group(CopperModMAIN.COURSE_TAB)));
+
+
+
+CopperModMAIN.java:
+ add above the Constructor (NOT INSIDE)
+ 
+	public static final ItemGroup COURSE_TAB = new ItemGroup("courseTab")
+	{
+		@Override
+		public ItemStack createIcon()
+		{
+			return new ItemStack(ModItems.COPPER_WIRE.get());
+		}
+	};

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "coppermod:oil_flowing",
+    "coppermod:oil_fluid"
+  ]
+}

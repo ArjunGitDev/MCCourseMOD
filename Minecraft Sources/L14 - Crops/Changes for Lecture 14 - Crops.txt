@@ -1,0 +1,154 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   │  └──zuccini_crop.json*
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│	   │  ├─block
+│	   │  │ ├─zuccini_crop0.json*
+│	   │  │ ├─zuccini_crop1.json*
+│	   │  │ ├─zuccini_crop2.json*
+│	   │  │ ├─zuccini_crop3.json*
+│	   │  │ ├─zuccini_crop4.json*
+│	   │  │ ├─zuccini_crop5.json*
+│	   │  │ ├─zuccini_crop6.json*
+│	   │  │ └─zuccini_crop7.json*
+│      │  └─item
+│	   │	└─zuccini_seed.json*
+│	   └──textures
+│		  ├─block
+│    	  │ ├─zuccini_crop_stage0.png*
+│    	  │ ├─zuccini_crop_stage1.png*
+│    	  │ ├─zuccini_crop_stage2.png*
+│    	  │ ├─zuccini_crop_stage3.png*
+│    	  │ ├─zuccini_crop_stage4.png*
+│    	  │ ├─zuccini_crop_stage5.png*
+│    	  │ ├─zuccini_crop_stage6.png*
+│    	  │ └─zuccini_crop_stage7.png*
+│		  └─item
+│    	    └─zuccini_seed.png*
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+├──block
+│  ├──ModBlocks.java*
+│  └──ZucciniCrop.java*
+├──block
+│  └──ModItems.java*
+│
+└── CopperModMAIN.java*
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+blockstates/zuccini_crop.json:
+{
+  "variants": {
+    "age=0": { "model": "coppermod:block/zuccini_crop0" },
+    "age=1": { "model": "coppermod:block/zuccini_crop1" },
+    "age=2": { "model": "coppermod:block/zuccini_crop2" },
+    "age=3": { "model": "coppermod:block/zuccini_crop3" },
+    "age=4": { "model": "coppermod:block/zuccini_crop4" },
+    "age=5": { "model": "coppermod:block/zuccini_crop5" },
+    "age=6": { "model": "coppermod:block/zuccini_crop6" },
+    "age=7": { "model": "coppermod:block/zuccini_crop7" }
+  }
+}
+
+en_us.json:
+  "block.coppermod.zuccini_crop": "Zuccini Seeds",
+
+models/block/zuccini_crop0.json (as example, just change the 0 in File name and the "crop" section of the json file)
+{
+  "parent": "block/crop",
+  "textures": {
+    "crop": "coppermod:block/zuccini_crop_stage0"
+  }
+}
+
+models/item/zuccini_seed.json
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coppermod:item/zuccini_seed"
+  }
+}
+
+
+ZucciniCrop.java
+package com.kaupenjoe.coppermod.block;
+
+import com.kaupenjoe.coppermod.item.ModItems;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CropsBlock;
+import net.minecraft.util.IItemProvider;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
+import org.antlr.v4.runtime.atn.BlockStartState;
+
+public class ZucciniCrop extends CropsBlock
+{
+    private static final VoxelShape[] SHAPES = new VoxelShape[]
+    {
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D),
+            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D)
+    };
+
+    public ZucciniCrop(Properties builder)
+    {
+        super(builder);
+    }
+
+    @Override
+    protected IItemProvider getSeedsItem()
+    {
+        return ModItems.ZUCCINI_SEED.get();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context)
+    {
+        return SHAPES[state.get(this.getAgeProperty())];
+    }
+}
+
+ModBlocks.java
+added After the Slabs and above the register method
+
+    public static final RegistryObject<Block> ZUCCINI_CROP =
+            Registration.BLOCKS.register("zuccini_crop",
+                    () -> new ZucciniCrop(AbstractBlock.Properties.from(Blocks.WHEAT)));
+
+
+ModItems.java
+added after the Boots
+
+    public static final RegistryObject<Item> ZUCCINI_SEED =
+            Registration.ITEMS.register("zuccini_seed",
+                    () -> new BlockItem(ModBlocks.ZUCCINI_CROP.get(),
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+
+CopperModMAIN.java
+The doClientStuff method needs to be changed. 
+
+    private void doClientStuff(final FMLClientSetupEvent event)
+    {
+        RenderTypeLookup.setRenderLayer(ModBlocks.ZUCCINI_CROP.get(), RenderType.getCutout());
+    }
+
+
+Texture and files are supplied as a Resource for this lecture!

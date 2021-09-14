@@ -1,0 +1,162 @@
+src/main/java/com/your/package/modid/
+├──block
+│  └──Electrifier.java*
+│
+├──util
+│  └──Registration.java*
+│
+├──tileentity
+│  ├──ElectrifierTile.java*
+│  └──ModTileEntites.java*
+│
+└── CopperModMAIN.java
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+Registration.java
+Add this after The ITEMS DeferredRegister:
+
+    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES
+            = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, CopperModMAIN.MOD_ID);
+			
+This needs to be added to the init() method:
+
+    TILE_ENTITY_TYPES.register(eventBus);
+			
+
+Electrifier.java
+Add these Methods somewhere in the file
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    {
+        return ModTileEntitites.ELECTRIFIER_TILE_ENTITY.get().create();
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state)
+    {
+        return true;
+    }
+
+
+
+ElectrifierTile.java
+
+package com.kaupenjoe.coppermod.tileentity;
+
+import com.kaupenjoe.coppermod.block.Electrifier;
+import com.kaupenjoe.coppermod.item.ModItems;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ElectrifierTile extends TileEntity 
+{
+    private int tick;
+
+    private final ItemStackHandler itemHandler = createHandler();
+
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
+
+
+    public ElectrifierTile(TileEntityType<?> tileEntityTypeIn)
+    {
+        super(tileEntityTypeIn);
+    }
+
+    public ElectrifierTile()
+    {
+        this(ModTileEntitites.ELECTRIFIER_TILE_ENTITY.get());
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT tag)
+    {
+        itemHandler.deserializeNBT(tag.getCompound("inv"));
+
+        tick = tag.getInt("tick");
+        super.read(state, tag);
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag)
+    {
+        tag.put("inv", itemHandler.serializeNBT());
+
+        tag.putInt("tick", tick);
+        return super.write(tag);
+    }
+
+    private ItemStackHandler createHandler() {
+        return new ItemStackHandler(1) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return true;
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
+            {
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side)
+    {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return handler.cast();
+        }
+
+        return super.getCapability(capability, side);
+    }
+}
+
+
+
+ModTileEntites.java:
+
+package com.kaupenjoe.coppermod.tileentity;
+
+import com.kaupenjoe.coppermod.block.ModBlocks;
+import com.kaupenjoe.coppermod.util.Registration;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.fml.RegistryObject;
+
+public class ModTileEntitites
+{
+    public static final RegistryObject<TileEntityType<ElectrifierTile>> ELECTRIFIER_TILE_ENTITY
+            = Registration.TILE_ENTITY_TYPES.register("electrifier_tile_entity", () -> TileEntityType.Builder.create(
+            () -> new ElectrifierTile(), ModBlocks.ELECTRIFIER.get()).build(null));
+
+    public static void register() { }
+}

@@ -1,0 +1,138 @@
+src/main/java/com/your/package/modid/
+├──world
+│  └───gen
+│      └──ModEntitySpawn.java*
+├──items
+│  ├───ModItems*
+│  └───ModSpawnEggItem*
+└───setup
+     └──ClientProxy.java*
+
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+ClientProxy.java:
+
+Add this to the init() Method
+    ModSpawnEggItem.initSpawnEggs();
+
+
+ModItems:
+
+Add this 
+    public static final RegistryObject<ModSpawnEggItem> BUFFALO_SPAWNING_EGG =
+            Registration.ITEMS.register("buffalo_spawn_egg",
+                    () -> new ModSpawnEggItem(ModEntityTypes.BUFFALO, 0xF02F4A, 0x7034F1,
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+
+ModSpawnEggItem:
+
+package com.kaupenjoe.coppermod.item;
+
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.resources.AsyncReloader;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.items.ItemStackHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class ModSpawnEggItem extends SpawnEggItem
+{
+    protected static final List<ModSpawnEggItem> UNADDED_EGGS = new ArrayList<>();
+    private final Lazy<? extends EntityType<?>> entityTypeSupplier;
+
+
+    public ModSpawnEggItem(final RegistryObject<? extends EntityType<?>> entitySupplier, int primaryColorIn,
+                           int secondaryColorIn, Properties builder)
+    {
+        super(null, primaryColorIn, secondaryColorIn, builder);
+        this.entityTypeSupplier = Lazy.of(entitySupplier::get);
+        UNADDED_EGGS.add(this);
+    }
+
+    public static void initSpawnEggs()
+    {
+        final Map<EntityType<?>, SpawnEggItem> EGGS = ObfuscationReflectionHelper.getPrivateValue(SpawnEggItem.class, null,
+        "EGGS");
+        DefaultDispenseItemBehavior dispenseItemBehavior = new DefaultDispenseItemBehavior()
+        {
+            @Override
+            protected ItemStack dispenseStack(IBlockSource source, ItemStack stack)
+            {
+                Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+                EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack.getTag());
+                type.spawn(source.getWorld(), stack, null, source.getBlockPos(),
+                        SpawnReason.DISPENSER, direction != Direction.UP,false);
+                stack.shrink(1);
+                return stack;
+            }
+        };
+
+        for (final SpawnEggItem spawnEgg : UNADDED_EGGS)
+        {
+            EGGS.put(spawnEgg.getType(null), spawnEgg);
+            DispenserBlock.registerDispenseBehavior(spawnEgg, dispenseItemBehavior);
+        }
+
+        UNADDED_EGGS.clear();
+    }
+
+    @Override
+    public EntityType<?> getType(CompoundNBT nbt)
+    {
+        return this.entityTypeSupplier.get();
+    }
+
+}
+
+
+
+ModEntitySpawn.java:
+
+package com.kaupenjoe.coppermod.world.gen;
+
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import com.kaupenjoe.coppermod.entities.ModEntityTypes;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import java.util.*;
+
+@Mod.EventBusSubscriber(modid = CopperModMAIN.MOD_ID)
+public class ModEntitySpawn
+{
+    @SubscribeEvent
+    public static void onBiomeLoad(BiomeLoadingEvent event)
+    {
+        RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
+        Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
+
+        if (!types.contains(BiomeDictionary.Type.NETHER) && !types.contains(BiomeDictionary.Type.END)
+                && !types.contains(BiomeDictionary.Type.OCEAN))
+        {
+            List<MobSpawnInfo.Spawners> base = event.getSpawns().getSpawner(EntityClassification.CREATURE);
+            base.add(new MobSpawnInfo.Spawners(ModEntityTypes.BUFFALO.get(), 30, 2, 5));
+        }
+    }
+}

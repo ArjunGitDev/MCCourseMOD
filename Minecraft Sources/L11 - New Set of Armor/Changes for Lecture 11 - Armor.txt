@@ -1,0 +1,135 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│	   │  └─item
+│      │    ├─copper_helmet.json*
+│      │    ├─copper_chestplate.json*
+│      │    ├─copper_leggings.json*
+│      │    └─copper_boots.json*
+│	   └──textures
+│		  ├─block
+│		  ├─item
+│    	  │  ├─copper_helmet.png*
+│    	  │  ├─copper_chestplate.png*
+│    	  │  ├─copper_leggings.png*
+│    	  │  └─copper_boots.png*
+│	      └─models
+│	   	    └──armor
+│	   	       ├──copper_layer_1.png*
+│	   	       └──copper_layer_2.png*
+
+
+src/main/java/com/your/package/modid/
+└──item
+	└──ModItems.java*
+
+en_us.json
+  "item.coppermod.copper_helmet": "Copper Helmet",
+  "item.coppermod.copper_chestplate": "Copper Chestplate",
+  "item.coppermod.copper_legging": "Copper Leggings",
+  "item.coppermod.copper_boots": "Copper Boots"
+
+ModItems.java
+	// The Variables should be added below the Tools
+	
+    public static final RegistryObject<Item> COPPER_HELMET =
+            Registration.ITEMS.register("copper_helmet",
+                    () -> new ArmorItem(ModArmorMaterial.COPPER, EquipmentSlotType.HEAD,
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+    public static final RegistryObject<Item> COPPER_CHESTPLATE =
+            Registration.ITEMS.register("copper_chestplate",
+                    () -> new ArmorItem(ModArmorMaterial.COPPER, EquipmentSlotType.CHEST,
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+    public static final RegistryObject<Item> COPPER_LEGGINGS =
+            Registration.ITEMS.register("copper_leggings",
+                    () -> new ArmorItem(ModArmorMaterial.COPPER, EquipmentSlotType.LEGS,
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+    public static final RegistryObject<Item> COPPER_BOOTS =
+            Registration.ITEMS.register("copper_boots",
+                    () -> new ArmorItem(ModArmorMaterial.COPPER, EquipmentSlotType.FEET,
+                            new Item.Properties().group(CopperModMAIN.TAB)));
+
+	// The enum should be added at the bottom of the ModItems Class
+	public enum ModArmorMaterial implements IArmorMaterial
+    {
+        COPPER(50, new int[] { 3, 6, 4, 3 }, 1, SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+                Ingredient.fromStacks(new ItemStack(ModItems.COPPER_INGOT.get())),
+                CopperModMAIN.MOD_ID + ":copper", 0, 0.1f);
+
+        private final int durability;
+        private final int[] damageReductionAmountArray;
+        private final int enchantability;
+        private final SoundEvent soundEvent;
+        private final Ingredient repairMaterial;
+        private final String name;
+        private final float toughness;
+        private final float knockbackResistance;
+
+        ModArmorMaterial(int durability, int[] damageReductionAmountArray, int enchantability, SoundEvent soundEvent,
+                         Ingredient repairMaterial, String name, float toughness, float knockbackResistance)
+        {
+            this.durability = durability;
+            this.damageReductionAmountArray = damageReductionAmountArray;
+            this.enchantability = enchantability;
+            this.soundEvent = soundEvent;
+            this.repairMaterial = repairMaterial;
+            this.name = name;
+            this.toughness = toughness;
+            this.knockbackResistance = knockbackResistance;
+        }
+
+        @Override
+        public int getDurability(EquipmentSlotType slotIn)
+        {
+            return this.durability;
+        }
+
+        @Override
+        public int getDamageReductionAmount(EquipmentSlotType slotIn)
+        {
+            return damageReductionAmountArray[slotIn.getIndex()];
+        }
+
+        @Override
+        public int getEnchantability()
+        {
+            return this.enchantability;
+        }
+
+        @Override
+        public SoundEvent getSoundEvent()
+        {
+            return this.soundEvent;
+        }
+
+        @Override
+        public Ingredient getRepairMaterial()
+        {
+            return this.repairMaterial;
+        }
+
+        @Override
+        public String getName()
+        {
+            return this.name;
+        }
+
+        @Override
+        public float getToughness()
+        {
+            return this.toughness;
+        }
+
+        @Override // Kockback resistance
+        public float func_230304_f_()
+        {
+            return this.knockbackResistance;
+        }
+    }

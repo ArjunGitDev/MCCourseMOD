@@ -1,0 +1,51 @@
+src/main/java/com/your/package/modid/
+├──item
+│  └──CopperedApple.java*
+└──util
+   └──KeyboardHelper.java*
+
+item/CopperedApple.java
+	// This Method needs to be added at the end of the CopperedApple Class
+    @Override
+    public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag)
+    {
+        if(KeyboardHelper.isHoldingShift())
+        {
+            tooltip.add(new StringTextComponent("Turns sheep into Copper Ingots"));
+        }
+        else
+        {
+            tooltip.add(new StringTextComponent("Hold"+"\u00A7e" + " SHIFT " + "\u00A77" + "for more information!" ));
+        }
+
+        super.addInformation(stack, world, tooltip, flag);
+    }
+	
+util/KeyboardHelper.java
+package com.kaupenjoe.coppermod.util;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.InputMappings;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
+
+public class KeyboardHelper
+{
+    @OnlyIn(Dist.CLIENT)
+    public static boolean isHoldingShift()
+    {
+        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(),
+                GLFW.GLFW_KEY_LEFT_SHIFT);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static boolean isHoldingCtrl()
+    {
+        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(),
+                GLFW.GLFW_KEY_LEFT_CONTROL);
+    }
+}
+
+	
+resource color

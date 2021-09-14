@@ -1,0 +1,258 @@
+src/main/java/com/your/package/modid/
+├──world
+│  └──gen
+│  	  └──ModTreeGeneration.java*
+│
+├──block
+│  	├──RedwoodTree.java*
+│  	└──RedwoodSapling.java*
+│
+│
+│
+└── CopperModMAIN.java
+
+
+src/main/resources/assets/modid/
+├──blockstates
+│   ├──redwood_leaves.json*
+│   ├──redwood_log.json*
+│   ├──redwood_planks.json*
+│  	└──redwood_sapling.json*
+│
+├──models
+│  	├──block
+│	│  	├──redwood_leaves.json*
+│	│  	├──redwood_log.json*
+│	│  	├──redwood_log_horizontal.json*
+│	│  	├──redwood_planks.json*
+│	│  	└──redwood_sapling.json*
+│   └──item
+│	  	├──redwood_leaves.json*
+│	  	├──redwood_log.json*
+│	  	├──redwood_planks.json*
+│	  	└──redwood_sapling.json*
+│
+├──blockstates
+│   ├──redwood_leaves.png*
+│   ├──redwood_log.png*
+│   ├──redwood_log_top.png*
+│   ├──redwood_planks.png*
+│  	└──redwood_sapling.png*
+│
+└── CopperModMAIN.java
+
+
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+JSON files and Textures are provided seperately! 
+
+ModBlocks:
+
+Add these Blocks:
+
+    public static final RegistryObject<Block> REDWOOD_PLANKS = register("redwood_planks",
+            () -> new Block(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
+
+    public static final RegistryObject<Block> REDWOOD_LOG = register("redwood_log",
+            () -> new RotatedPillarBlock(AbstractBlock.Properties.from(Blocks.OAK_WOOD)));
+
+    public static final RegistryObject<Block> REDWOOD_LEAVES = register("redwood_leaves",
+            () -> new LeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
+
+
+    public static final RegistryObject<Block> REDWOOD_SAPLING = register("redwood_sapling",
+            () -> new RedwoodSapling(
+                    () -> new RedwoodTree(), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)
+            ));
+
+
+
+
+ModTreeGeneration.java:
+
+package com.kaupenjoe.coppermod.world.gen;
+
+import com.google.common.collect.Lists;
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import com.kaupenjoe.coppermod.entities.ModEntityTypes;
+import com.kaupenjoe.coppermod.world.feature.OreType;
+import com.kaupenjoe.coppermod.world.feature.RedwoodTree;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeGenerationSettings;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.placement.*;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+
+@Mod.EventBusSubscriber(modid = CopperModMAIN.MOD_ID)
+public class ModTreeGeneration
+{
+    @SubscribeEvent
+    public static void onBiomeLoad(BiomeLoadingEvent event)
+    {
+        RegistryKey<Biome> key = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, event.getName());
+        Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
+
+        if (types.contains(BiomeDictionary.Type.PLAINS))
+        {
+            List<Supplier<ConfiguredFeature<?, ?>>> base =
+                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
+
+            base.add(() -> Feature.TREE.withConfiguration(RedwoodTree.REDWOOD_TREE_CONFIG)
+                    .withPlacement(Placement.DARK_OAK_TREE.configure(NoPlacementConfig.INSTANCE)));
+        }
+    }
+}
+
+
+RedwoodTree: 
+
+package com.kaupenjoe.coppermod.world.feature;
+
+import com.kaupenjoe.coppermod.block.ModBlocks;
+import net.minecraft.block.trees.Tree;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.trunkplacer.GiantTrunkPlacer;
+import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
+import net.minecraftforge.common.IPlantable;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Random;
+
+public class RedwoodTree extends Tree
+{
+    private static final int BASE_HEIGHT = 4;
+    private static final int FIRST_RANDOM_HEIGHT = 3;
+    private static final int SECOND_RANDOM_HEIGHT = 5;
+
+    private static final int LEAVE_RADIUS = 3; 
+    private static final int LEAVE_OFFSET = 3;
+    private static final int LEAVE_HEIGHT = 4;
+
+    public static final BaseTreeFeatureConfig REDWOOD_TREE_CONFIG = (new BaseTreeFeatureConfig.Builder(
+            new SimpleBlockStateProvider(ModBlocks.REDWOOD_LOG.get().getDefaultState()),
+            new SimpleBlockStateProvider(ModBlocks.REDWOOD_LEAVES.get().getDefaultState()),
+            new BlobFoliagePlacer(FeatureSpread.func_242252_a(LEAVE_RADIUS),
+                    FeatureSpread.func_242252_a(LEAVE_OFFSET),LEAVE_HEIGHT),
+            new StraightTrunkPlacer(BASE_HEIGHT, FIRST_RANDOM_HEIGHT, SECOND_RANDOM_HEIGHT),
+            new TwoLayerFeature(1, 0, 1)
+    )).build();
+
+    @Override
+    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive)
+    {
+        return Feature.TREE.withConfiguration(REDWOOD_TREE_CONFIG);
+    }
+}
+
+RedwoodSapling:
+
+package com.kaupenjoe.coppermod.block;
+
+import net.minecraft.block.*;
+import net.minecraft.block.trees.Tree;
+import net.minecraft.client.renderer.texture.SpriteUploader;
+import net.minecraft.network.rcon.IServer;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.ForgeEventFactory;
+
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class RedwoodSapling extends BushBlock implements IGrowable
+{
+    public static final IntegerProperty STAGE = BlockStateProperties.STAGE_0_1;
+
+    private final Supplier<Tree> tree;
+
+    public RedwoodSapling(Supplier<Tree> treeIn, Properties properties)
+    {
+        super(properties);
+        this.tree = treeIn;
+    }
+
+    @Override
+    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state)
+    {
+        return (double)worldIn.rand.nextFloat() < 0.5D;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand)
+    {
+        super.tick(state, worldIn, pos, rand);
+        if(!worldIn.isAreaLoaded(pos, 1))
+        {
+            return;
+        }
+        if(worldIn.getLight(pos.up()) >= 9 && rand.nextInt(7) == 0)
+        {
+            this.grow(worldIn, rand, pos, state);
+        }
+    }
+
+    @Override
+    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state)
+    {
+        if(state.get(STAGE) == 0)
+        {
+            worldIn.setBlockState(pos, state.func_235896_a_(STAGE), 4); // state.cycle
+        }
+        else
+        {
+            if(!ForgeEventFactory.saplingGrowTree(worldIn, rand, pos)) return;
+            this.tree.get().attemptGrowTree(worldIn, worldIn.getChunkProvider().getChunkGenerator(), pos, state, rand);
+        }
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(STAGE);
+    }
+}
+
+
+
+

@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures":{
+    "all": "coppermod:block/rusted_copper"
+  }
+
+}

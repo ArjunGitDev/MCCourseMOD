@@ -1,0 +1,81 @@
+src/main/java/com/your/package/modid/
+├──events
+│   └──ModEvents.java*
+├──item
+│   └──CopperedApple.java*
+└──util
+	└──Config.java*
+
+NOTE: 
+run/config/
+coppermod-client.toml
+coppermod-server.toml
+
+both files above will be generated automatically. 
+
+ModEvents.java
+	// Here the Change is simply the duration of the copperedGlow effect to read from the File, instead of having it hard-coded.
+    private static EffectInstance copperedGlow = new EffectInstance(Effects.GLOWING, Config.COPPERED_GLOW_DURATION.get());
+
+CopperedApple.java
+	// Inside the CopperedApple Constructor, once again the duration is now read from the Config File. 
+    public CopperedApple()
+    {
+        super(new Properties()
+                .group(CopperModMAIN.TAB)
+                .food(new Food.Builder()
+                        .hunger(5)
+                        .saturation(1.5f)
+                        .effect(() -> new EffectInstance
+                                (Effects.GLOWING, Config.COPPERED_GLOW_DURATION.get(), 1), 0.5f) // CHANGE WAS HERE
+                        .build()));
+    }
+
+Config.java
+package com.kaupenjoe.coppermod.util;
+
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.common.Mod;
+
+import java.io.File;
+
+@Mod.EventBusSubscriber
+public class Config
+{
+    public static ForgeConfigSpec SERVER_CONFIG;
+    public static ForgeConfigSpec CLIENT_CONFIG;
+
+    public static ForgeConfigSpec.IntValue COPPERED_GLOW_DURATION;
+
+    static {
+
+        ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
+        ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
+
+        glowingDuration(SERVER_BUILDER, CLIENT_BUILDER);
+
+        SERVER_CONFIG = SERVER_BUILDER.build();
+        CLIENT_CONFIG = CLIENT_BUILDER.build();
+    }
+
+    private static void glowingDuration(ForgeConfigSpec.Builder SERVER_BUILDER,
+                                        ForgeConfigSpec.Builder CLIENT_BUILDER)
+    {
+        COPPERED_GLOW_DURATION = CLIENT_BUILDER.comment("How long the Glowing lasts for Coppered Apples (in Ticks)")
+                .defineInRange("glow_duration", 300, 100, Integer.MAX_VALUE);
+    }
+
+    public static void loadConfigFile(ForgeConfigSpec config, String path)
+    {
+        final CommentedFileConfig file = CommentedFileConfig.builder(new File(path))
+                .sync().autosave().writingMode(WritingMode.REPLACE).build();
+
+        file.load();
+        config.setConfig(file);
+    }
+}
+
+
+

@@ -1,0 +1,47 @@
+src/main/resources
+└── data
+     └──coppermod
+	    └──recipes
+	        ├──copper_block.json*
+			└──copper_ingot.json*
+
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+data/coppermod/recipes/copper_block.json*
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxx",
+    "xxx",
+    "xxx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "coppermod:copper_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "coppermod:copper_block"
+  }
+}
+
+
+data/coppermod/recipes/copper_ingot.json*
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "",
+  "ingredients":
+  [
+    {"item": "coppermod:copper_block"}
+  ],
+  "result":
+  {
+    "item": "coppermod:copper_ingot",
+    "count": 9
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "gcc",
+        "gAc",
+        "ggc"
+    ],
+    "key": {
+        "g": {
+            "item": "minecraft:gold_ingot"
+        },
+        "c": {
+            "item": "coppermod:copper_ingot"
+        },
+        "A": {
+            "item": "minecraft:apple"
+        }
+    },
+    "result": {
+        "item": "coppermod:coppered_apple",
+        "count": 1
+    }
+}

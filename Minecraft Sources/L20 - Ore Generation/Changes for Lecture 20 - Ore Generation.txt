@@ -1,0 +1,147 @@
+src/main/java/com/your/package/modid/
+├──world
+│  └──gen
+│  	  ├──ModOreGeneration.java*
+│  	  └──OreType.java*
+│
+└── CopperModMAIN.java
+  
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+
+ModOreGeneration.java:
+
+package com.kaupenjoe.coppermod.world.gen;
+
+import com.google.common.collect.Lists;
+import com.kaupenjoe.coppermod.CopperModMAIN;
+import com.kaupenjoe.coppermod.block.ModBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeGenerationSettings;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.placement.ConfiguredPlacement;
+import net.minecraft.world.gen.placement.DepthAverageConfig;
+import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.placement.TopSolidRangeConfig;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+@Mod.EventBusSubscriber(modid = CopperModMAIN.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ModOreGeneration
+{
+    @SubscribeEvent
+    public static void generateOres(FMLLoadCompleteEvent event)
+    {
+        for (OreType ore: OreType.values())
+        {
+            OreFeatureConfig oreFeature = new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241882_a,
+                    ore.getResource().getDefaultState(), ore.getMaxVeinSize());
+
+            ConfiguredPlacement configuredPlacement = Placement.field_242910_o.configure(
+                    new DepthAverageConfig(ore.getMinHeight(), ore.getMaxHeight()));
+
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE,
+                    ore.getResource().getRegistryName(),
+                    Feature.ORE.withConfiguration(oreFeature).withPlacement(configuredPlacement)
+                    .func_242728_a().func_242731_b(ore.getMaxVeinSize()));
+
+            for (Biome biome : ForgeRegistries.BIOMES)
+            {
+                if (!biome.getCategory().equals(Biome.Category.NETHER) && !biome.getCategory().equals(Biome.Category.THEEND))
+                {
+                    addFeatureToBiome(
+                            biome,
+                            GenerationStage.Decoration.UNDERGROUND_ORES,
+                            WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(ore.getResource().getRegistryName())
+                    );
+                }
+            }
+        }
+    }
+
+    public static void addFeatureToBiome(Biome biome, GenerationStage.Decoration decoration, ConfiguredFeature<?, ?> configuredFeature) {
+        List<List<Supplier<ConfiguredFeature<?, ?>>>> biomeFeatures = new ArrayList<>(
+                biome.getGenerationSettings().getFeatures()
+        );
+
+        while (biomeFeatures.size() <= decoration.ordinal()) {
+            biomeFeatures.add(Lists.newArrayList());
+        }
+
+        List<Supplier<ConfiguredFeature<?, ?>>> features = new ArrayList<>(biomeFeatures.get(decoration.ordinal()));
+        features.add(() -> configuredFeature);
+        biomeFeatures.set(decoration.ordinal(), features);
+
+        /* Change field_242484_f that contains the Configured Features of the Biome */
+        ObfuscationReflectionHelper.setPrivateValue(BiomeGenerationSettings.class, biome.getGenerationSettings(),
+                biomeFeatures, "field_242484_f");
+    }
+}
+
+
+
+OreType.java:
+
+package com.kaupenjoe.coppermod.world.gen;
+
+import com.kaupenjoe.coppermod.block.ModBlocks;
+import net.minecraft.block.Block;
+
+public enum OreType {
+    COPPER(ModBlocks.COPPER_ORE.get(),8,25, 50),
+    COPPER_BLOCK(ModBlocks.COPPER_BLOCK.get(),10,10, 60);
+
+    private final Block block;
+    private final int maxVeinSize;
+    private final int minHeight;
+    private final int maxHeight;
+
+    OreType(Block block, int maxVeinSize, int minHeight, int maxHeight) {
+        this.block = block;
+        this.maxVeinSize = maxVeinSize;
+        this.minHeight = minHeight;
+        this.maxHeight = maxHeight;
+    }
+
+    public Block getResource() {
+        return block;
+    }
+
+    public int getMaxVeinSize() {
+        return maxVeinSize;
+    }
+
+    public int getMinHeight() {
+        return minHeight;
+    }
+
+    public int getMaxHeight() {
+        return maxHeight;
+    }
+
+    public static OreType get(Block block) {
+        for (OreType ore : values()) {
+            if (block == ore.block) {
+                return ore;
+            }
+        }
+        return null;
+    }
+}
+
+

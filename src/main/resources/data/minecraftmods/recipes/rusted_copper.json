@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "xx",
+        "xx"
+    ],
+    "key": {
+        "x": {
+            "item": "coppermod:copper_ingot"
+        }
+    },
+    "result": {
+        "item": "coppermod:rusted_copper",
+        "count": 1
+    }
+}

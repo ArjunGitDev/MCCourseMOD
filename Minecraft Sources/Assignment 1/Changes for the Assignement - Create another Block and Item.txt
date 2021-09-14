@@ -1,0 +1,95 @@
+src/main/resources
+├── assets
+│   └──coppermod
+│	   ├──blockstates
+│	   │  └──copper_ore.json*
+│	   ├──lang
+│	   │  └──en_us.json*
+│	   ├──models
+│	   │  ├─block
+│	   │  │ └─copper_ore.json*
+│	   │  └─item
+│	   │	├─copper_ore.json*
+│	   │	└─copper_wire.json*
+│	   └──textures
+│		  ├─block
+│		  │	└─copper_block.png*
+│		  └─item
+│			└─copper_block.png*
+├── META-INF
+│   └── mods.toml
+└── pack.mcmeta
+
+src/main/java/com/your/package/modid/
+└──block
+   ├──ModBlocks.java*
+   └──CopperOre.java*
+
+
+Files marked with * must be created or changed. Code that is written are things to be ADDED. If something is to be replaced a comment is made! 
+
+blockstates/copper_ore.json*
+{
+  "variants": {
+    "": { "model": "coppermod:block/copper_ore" }
+  }
+}
+
+en_us.json
+  "item.coppermod.copper_wire": "Copper Wire",
+  "block.coppermod.copper_ore": "Copper Ore"
+  
+models/block/copper_ore.json
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "coppermod:block/copper_ore"
+  }
+}
+
+models/item/copper_ore.json
+{
+  "parent": "coppermod:block/copper_ore"
+}
+
+models/item/copper_wire.json
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coppermod:item/copper_wire"
+  }
+}
+
+textures/block/copper_block.png
+ supplied in Resources
+ 
+textures/item/copper_wire.png
+ supplied in Resources
+
+ModBlocks.java
+
+    public static final RegistryObject<Block> COPPER_ORE = register("copper_ore",
+            () -> new CopperOre());
+
+
+
+CopperOre.java
+package com.kaupenjoe.coppermod.block;
+
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.OreBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraftforge.common.ToolType;
+
+public class CopperOre extends OreBlock
+{
+    public CopperOre()
+    {
+        super(AbstractBlock.Properties.create(Material.ROCK)
+                .hardnessAndResistance(3f, 10f)
+                .harvestLevel(2)
+                .harvestTool(ToolType.PICKAXE)
+                .sound(SoundType.STONE));
+    }
+}
