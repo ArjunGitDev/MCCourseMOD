@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -19,6 +20,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
+import com.arjun.coppermod.util.KeyboardHelper;
 
 import java.util.Collection;
 
@@ -66,11 +68,14 @@ public class ModEvents {
             }
         }
     }
-
+    ActiveRenderInfo render = new ActiveRenderInfo();
     @SubscribeEvent
-    public String onWorldLoad(WorldEvent event){
-        ActiveRenderInfo render = new ActiveRenderInfo();
-        //render.update();
-        return "";
+    public void onWorldLoad(WorldEvent event){
+        System.out.println("Player in World");
+        if (KeyboardHelper.isHoldingLeftShift()) {
+            System.out.println("Player holding shift");
+            render.setPosition(0,20,0);
+        }
+
     }
 }
